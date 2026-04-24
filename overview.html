@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام إدارة العيادة الذكي - لمحة عامة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1a4d8a;
+      --blue-light: #2563eb;
+      --teal: #0891b2;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-600: #475569;
+      --gray-800: #1e293b;
+      --green: #16a34a;
+      --purple: #7c3aed;
+      --amber: #d97706;
+      --red: #dc2626;
+    }
+    body { font-family: 'Cairo', 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-800); line-height: 1.7; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0f2c5a 0%, #1a4d8a 50%, #0891b2 100%);
+      color: white;
+      padding: 80px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-inner { position: relative; max-width: 800px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px; padding: 6px 18px; font-size: 13px; margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-badge .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+    .hero h1 span { color: #67e8f9; }
+    .hero p { font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto 36px; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: white; color: var(--blue); font-weight: 700;
+      padding: 14px 32px; border-radius: 12px; text-decoration: none;
+      font-size: 15px; transition: all .2s; border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.1); color: white; font-weight: 600;
+      padding: 14px 28px; border-radius: 12px; text-decoration: none;
+      font-size: 15px; transition: all .2s; border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(8px);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.2); }
+
+    /* ── Stats ── */
+    .stats-bar {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 24px;
+    }
+    .stats-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); }
+    .stat-label { font-size: 13px; color: var(--gray-600); }
+
+    /* ── Sections ── */
+    .section { padding: 64px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag { display: inline-block; background: #dbeafe; color: var(--blue); font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .section h2 { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: var(--gray-800); margin-bottom: 10px; }
+    .section-desc { font-size: 16px; color: var(--gray-600); max-width: 600px; }
+
+    /* ── Feature Grid ── */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+    .feature-card {
+      background: white; border: 1px solid var(--gray-200); border-radius: 16px;
+      padding: 24px; transition: all .25s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,77,138,0.12); border-color: #93c5fd; }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 16px;
+    }
+    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--gray-800); }
+    .feature-card p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+
+    /* ── Modules ── */
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-top: 40px; }
+    .module-card {
+      background: white; border: 1px solid var(--gray-200); border-radius: 12px;
+      padding: 18px 16px; text-align: center; transition: all .2s;
+    }
+    .module-card:hover { border-color: #93c5fd; background: #eff6ff; }
+    .module-icon { font-size: 28px; margin-bottom: 10px; }
+    .module-card h4 { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+    .module-card p { font-size: 12px; color: var(--gray-600); }
+
+    /* ── Source Structure ── */
+    .source-section { background: #0f172a; color: #e2e8f0; padding: 64px 24px; }
+    .source-inner { max-width: 1100px; margin: 0 auto; }
+    .source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 36px; }
+    @media (max-width: 768px) { .source-grid { grid-template-columns: 1fr; } }
+    .source-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 20px; font-family: 'Courier New', monospace;
+    }
+    .source-card h4 { font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700; color: #67e8f9; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .file-tree { font-size: 12px; line-height: 2; }
+    .file-tree .dir { color: #fcd34d; }
+    .file-tree .file { color: #86efac; }
+    .file-tree .comment { color: #64748b; }
+    .file-tree .indent { padding-right: 18px; }
+
+    /* ── Tech Stack ── */
+    .tech-section { background: var(--gray-800); color: white; padding: 64px 24px; }
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; margin-top: 36px; }
+    .tech-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .tech-card .tech-icon { font-size: 24px; margin-bottom: 8px; }
+    .tech-card p { font-size: 13px; font-weight: 600; }
+
+    /* ── Credentials ── */
+    .creds-box {
+      background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+      border: 2px solid #93c5fd; border-radius: 16px;
+      padding: 28px; margin-top: 40px; text-align: center;
+    }
+    .creds-box h3 { font-size: 18px; font-weight: 700; color: var(--blue); margin-bottom: 16px; }
+    .creds-table { display: inline-flex; gap: 32px; }
+    .cred-item label { font-size: 13px; color: var(--gray-600); display: block; }
+    .cred-item strong { font-size: 18px; color: var(--blue); font-family: monospace; }
+
+    /* ── Download Banner ── */
+    .download-banner {
+      background: linear-gradient(135deg, #1a4d8a, #0891b2);
+      color: white; padding: 60px 24px; text-align: center;
+    }
+    .download-banner h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 800; margin-bottom: 12px; }
+    .download-banner p { font-size: 16px; color: rgba(255,255,255,0.85); margin-bottom: 28px; }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: white; color: var(--blue); font-weight: 800;
+      padding: 16px 40px; border-radius: 14px; text-decoration: none;
+      font-size: 16px; transition: all .2s; cursor: pointer; border: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+    .btn-download .icon { font-size: 20px; }
+
+    /* ── Footer ── */
+    footer { background: #0f172a; color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 13px; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .stats-inner { gap: 24px; }
+      .hero { padding: 60px 16px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      نظام طبي متكامل مدعوم بالذكاء الاصطناعي
+    </div>
+    <h1>نظام إدارة العيادة<br><span>الذكي والمتكامل</span></h1>
+    <p>حل شامل لإدارة مرضاك، زياراتهم، وصفاتهم الطبية، وعملياتهم الجراحية — مع دعم كامل للعربية والإنجليزية</p>
+    <div class="hero-btns">
+      <a href="/" class="btn-primary">🚀 فتح النظام</a>
+      <a href="#features" class="btn-outline">📖 مزيد من التفاصيل</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">11+</div><div class="stat-label">وحدة وظيفية</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">لغة مدعومة</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">يعمل محلياً</div></div>
+    <div class="stat"><div class="stat-num">AI</div><div class="stat-label">ذكاء اصطناعي مدمج</div></div>
+  </div>
+</div>
+
+<!-- Features -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <span class="section-tag">المميزات الرئيسية</span>
+    <h2>نظام طبي شامل من الألف إلى الياء</h2>
+    <p class="section-desc">كل ما يحتاجه طبيب العيادة في منصة واحدة متكاملة</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#dbeafe;">🩺</div>
+        <h3>إدارة المرضى الشاملة</h3>
+        <p>ملف طبي متكامل لكل مريض: بيانات شخصية، التاريخ المرضي، الحساسية، الأمراض المزمنة، ومؤشر BMI تلقائي.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#dcfce7;">💊</div>
+        <h3>وصفات طبية ذكية</h3>
+        <p>اقتراحات دوائية بالذكاء الاصطناعي بناءً على التشخيص، مع فحص التداخلات الدوائية التلقائي والتنبيه الفوري.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#fae8ff;">🔬</div>
+        <h3>تحليل الصور الطبية بالذكاء الاصطناعي</h3>
+        <p>رفع نتائج التحاليل والأشعة وتحليلها تلقائياً: CBC، CT، MRI، أشعة صوتية، وتخطيط القلب.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#fff7ed;">📊</div>
+        <h3>تقارير طبية وجراحية</h3>
+        <p>توليد تقارير سريرية وجراحية شاملة بلمسة واحدة، مع إمكانية الطباعة بتنسيق A4 احترافي ثنائي اللغة.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#f0fdf4;">📅</div>
+        <h3>نظام التذكيرات</h3>
+        <p>تذكيرات مواعيد المتابعة، العمليات، المكالمات الهاتفية، والأدوية — مع عرض التنبيهات على لوحة التحكم.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#fef2f2;">🏥</div>
+        <h3>إدارة العمليات الجراحية</h3>
+        <p>توثيق العمليات بالنهج الجراحي، التخدير، النتائج الجراحية، وتوليد تقرير جراحي بالذكاء الاصطناعي.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modules -->
+<section class="section" style="background:var(--gray-100);">
+  <div class="section-inner">
+    <span class="section-tag">الوحدات الوظيفية</span>
+    <h2>11 وحدة متكاملة في نظام واحد</h2>
+    <div class="modules-grid">
+      <div class="module-card"><div class="module-icon">📊</div><h4>لوحة التحكم</h4><p>إحصاءات ومخططات بيانية</p></div>
+      <div class="module-card"><div class="module-icon">👥</div><h4>المرضى</h4><p>إدارة سجلات المرضى</p></div>
+      <div class="module-card"><div class="module-icon">🩺</div><h4>الزيارات</h4><p>توثيق زيارات العيادة</p></div>
+      <div class="module-card"><div class="module-icon">💊</div><h4>الوصفات</h4><p>وصفات ذكية مع التداخل</p></div>
+      <div class="module-card"><div class="module-icon">✂️</div><h4>الجراحة</h4><p>توثيق العمليات الجراحية</p></div>
+      <div class="module-card"><div class="module-icon">📋</div><h4>التقارير</h4><p>تقارير طبية وجراحية</p></div>
+      <div class="module-card"><div class="module-icon">🔔</div><h4>التذكيرات</h4><p>إدارة المواعيد والتنبيهات</p></div>
+      <div class="module-card"><div class="module-icon">📎</div><h4>المرفقات</h4><p>رفع وتحليل الملفات الطبية</p></div>
+      <div class="module-card"><div class="module-icon">🤖</div><h4>الذكاء الاصطناعي</h4><p>تحليل، اقتراح، وتقارير</p></div>
+      <div class="module-card"><div class="module-icon">🖨️</div><h4>الطباعة</h4><p>طباعة مخصصة متعددة الأحجام</p></div>
+      <div class="module-card"><div class="module-icon">⚙️</div><h4>الإعدادات</h4><p>تخصيص العيادة والطباعة</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Source Structure -->
+<section class="source-section" id="source">
+  <div class="source-inner">
+    <span class="section-tag" style="background:rgba(255,255,255,0.1);color:#67e8f9;">بنية الكود المصدري</span>
+    <h2 style="color:white;">هيكل ملفات المشروع</h2>
+    <p style="color:rgba(255,255,255,0.7);margin-top:8px;">React 18 + TypeScript + Vite + Tailwind CSS — البنية الكاملة للمشروع</p>
+    <div class="source-grid">
+      <div class="source-card">
+        <h4>📁 src/ — الملفات الرئيسية</h4>
+        <div class="file-tree">
+          <div class="dir">src/</div>
+          <div class="indent file">├── App.tsx <span class="comment">// التوجيه والمسارات</span></div>
+          <div class="indent file">├── index.css <span class="comment">// التصميم العام</span></div>
+          <div class="dir indent">├── pages/</div>
+          <div class="indent indent file">├── Dashboard.tsx</div>
+          <div class="indent indent file">├── Patients.tsx</div>
+          <div class="indent indent file">├── PatientProfile.tsx</div>
+          <div class="indent indent file">├── Visits.tsx</div>
+          <div class="indent indent file">├── Prescriptions.tsx</div>
+          <div class="indent indent file">├── Surgeries.tsx</div>
+          <div class="indent indent file">├── Reports.tsx</div>
+          <div class="indent indent file">├── Reminders.tsx</div>
+          <div class="indent indent file">├── Medications.tsx</div>
+          <div class="indent indent file">├── Archive.tsx</div>
+          <div class="indent indent file">├── Settings.tsx</div>
+          <div class="indent indent file">└── Login.tsx</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <h4>📁 src/lib/ — المكتبات والبيانات</h4>
+        <div class="file-tree">
+          <div class="dir">src/lib/</div>
+          <div class="indent file">├── store.ts <span class="comment">// localStorage + mock AI</span></div>
+          <div class="indent file">├── types.ts <span class="comment">// TypeScript interfaces</span></div>
+          <div class="indent file">├── utils.ts <span class="comment">// cn() helper</span></div>
+          <div class="indent file">├── patient-number.ts <span class="comment">// QR + IDs</span></div>
+          <div class="indent file">└── arabic-normalize.ts</div>
+          <br/>
+          <div class="dir">src/components/</div>
+          <div class="indent dir">├── layout/</div>
+          <div class="indent indent file">├── Layout.tsx</div>
+          <div class="indent indent file">└── Navbar.tsx</div>
+          <div class="indent dir">├── features/</div>
+          <div class="indent indent file">├── QRScanner.tsx</div>
+          <div class="indent indent file">├── PinDialog.tsx</div>
+          <div class="indent indent file">├── CameraCapture.tsx</div>
+          <div class="indent indent file">└── FileViewer.tsx</div>
+          <div class="indent dir">└── ui/ <span class="comment">// shadcn/ui</span></div>
+        </div>
+      </div>
+      <div class="source-card">
+        <h4>📁 src/hooks/ — React Hooks</h4>
+        <div class="file-tree">
+          <div class="dir">src/hooks/</div>
+          <div class="indent file">├── useLanguage.tsx <span class="comment">// AR/EN + RTL</span></div>
+          <div class="indent file">└── useClock.ts <span class="comment">// ساعة حية</span></div>
+          <br/>
+          <div class="dir">src/constants/</div>
+          <div class="indent file">└── translations.ts <span class="comment">// 200+ ترجمة</span></div>
+          <br/>
+          <div class="dir">src/types/</div>
+          <div class="indent file">└── index.ts</div>
+        </div>
+      </div>
+      <div class="source-card">
+        <h4>📄 ملفات الإعداد</h4>
+        <div class="file-tree">
+          <div class="file">package.json <span class="comment">// React 18, Vite, Tailwind</span></div>
+          <div class="file">vite.config.ts <span class="comment">// @/ alias</span></div>
+          <div class="file">tailwind.config.ts <span class="comment">// ألوان + قوالب</span></div>
+          <div class="file">tsconfig.json</div>
+          <div class="file">components.json <span class="comment">// shadcn/ui config</span></div>
+          <br/>
+          <div class="dir">public/</div>
+          <div class="indent file">├── overview.html <span class="comment">// هذه الصفحة</span></div>
+          <div class="indent file">└── og-image.jpg</div>
+          <br/>
+          <div class="comment">// قاعدة البيانات: localStorage فقط</div>
+          <div class="comment">// لا يوجد backend خارجي</div>
+          <div class="comment">// جميع البيانات في المتصفح</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;padding:20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;">
+      <h4 style="color:#67e8f9;margin-bottom:12px;font-size:15px;">📦 نموذج من كود App.tsx (التوجيه)</h4>
+      <pre style="font-size:12px;color:#86efac;line-height:1.8;overflow-x:auto;font-family:'Courier New',monospace;direction:ltr;text-align:left;">import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Patients from './pages/Patients';
+import Visits from './pages/Visits';
+import Prescriptions from './pages/Prescriptions';
+import Surgeries from './pages/Surgeries';
+// ... more imports
+
+export default function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/patients" element={&lt;Patients /&gt;} /&gt;
+        &lt;Route path="/visits" element={&lt;Visits /&gt;} /&gt;
+        &lt;Route path="/prescriptions" element={&lt;Prescriptions /&gt;} /&gt;
+        &lt;Route path="/surgeries" element={&lt;Surgeries /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section class="tech-section">
+  <div class="section-inner" style="max-width:1100px;margin:0 auto;">
+    <span class="section-tag" style="background:rgba(255,255,255,0.1);color:white;">التقنيات المستخدمة</span>
+    <h2 style="color:white;">مبني بأحدث تقنيات الويب</h2>
+    <div class="tech-grid">
+      <div class="tech-card"><div class="tech-icon">⚛️</div><p>React 18</p></div>
+      <div class="tech-card"><div class="tech-icon">📘</div><p>TypeScript</p></div>
+      <div class="tech-card"><div class="tech-icon">⚡</div><p>Vite 5</p></div>
+      <div class="tech-card"><div class="tech-icon">🎨</div><p>Tailwind CSS</p></div>
+      <div class="tech-card"><div class="tech-icon">📦</div><p>localStorage</p></div>
+      <div class="tech-card"><div class="tech-icon">📈</div><p>Recharts</p></div>
+      <div class="tech-card"><div class="tech-icon">🧩</div><p>shadcn/ui</p></div>
+      <div class="tech-card"><div class="tech-icon">🛣️</div><p>React Router</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Login Info -->
+<section class="section">
+  <div class="section-inner">
+    <div class="creds-box">
+      <h3>🔐 بيانات الدخول التجريبية</h3>
+      <div class="creds-table">
+        <div class="cred-item"><label>اسم المستخدم</label><strong>admin</strong></div>
+        <div class="cred-item"><label>كلمة المرور</label><strong>admin</strong></div>
+      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--gray-600);">يمكن تغيير بيانات الطبيب واسم العيادة من صفحة الإعدادات</p>
+    </div>
+  </div>
+</section>
+
+<!-- Download -->
+<section class="download-banner">
+  <h2>⬇️ تحميل الكود المصدري الكامل</h2>
+  <p>احصل على بنية المشروع الكاملة من OnSpace</p>
+  <button class="btn-download" onclick="showDownloadInstructions()">
+    <span class="icon">📦</span>
+    تعليمات تحميل المشروع
+  </button>
+</section>
+
+<footer>
+  <p>نظام إدارة العيادة الذكي &copy; 2025 · مبني بـ OnSpace AI · جميع الحقوق محفوظة</p>
+</footer>
+
+<script>
+function showDownloadInstructions() {
+  alert(
+    'لتحميل الكود المصدري الكامل للمشروع:\n\n' +
+    '1. ارجع إلى واجهة OnSpace\n' +
+    '2. اضغط زر "Download" في شريط الأدوات العلوي\n' +
+    '3. سيتم تحميل ZIP يحتوي على:\n' +
+    '   • src/ — كامل ملفات React/TypeScript\n' +
+    '   • public/ — الملفات العامة\n' +
+    '   • package.json, vite.config.ts\n' +
+    '   • tailwind.config.ts, tsconfig.json\n' +
+    '   • كل ملفات الإعداد\n\n' +
+    'يمكنك أيضاً:\n' +
+    '• الذهاب للإعدادات → تحميل قاعدة البيانات (clinic.zip)\n' +
+    '• أو تصدير البيانات كـ SQL من نفس الصفحة'
+  );
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
